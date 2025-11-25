@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="intro">
+        <p class="eyebrow">Invoice Calculator</p>
+        <h1>Portable laptop-style workspace.</h1>
+        <p>
+          Inspired by <strong>Invoice Calculator.xlsx</strong>, now reimagined as
+          a responsive laptop calculator. Pick the scenario, enter the
+          VAT-inclusive amount, and the desk-friendly UI crunches the same
+          numbers instantly.
+        </p>
+      </section>
+
+      <section class="laptop">
+        <div class="laptop-body">
+          <div class="laptop-screen">
+            <header class="screen-header">
+              <div class="choice-buttons" role="tablist">
+                <button
+                  type="button"
+                  class="scenario-button active"
+                  data-scenario="regular"
+                >
+                  Regular
+                </button>
+                <button
+                  type="button"
+                  class="scenario-button"
+                  data-scenario="pwd"
+                >
+                  PWD / Senior Citizen
+                </button>
+              </div>
+            </header>
+
+            <div class="screen-content">
+              <form id="calculator-form">
+                <div class="field-grid">
+                  <label>
+                    <span>Total Sales (VAT Inclusive)</span>
+                    <input
+                      type="number"
+                      id="totalSales"
+                      min="0"
+                      step="0.01"
+                      value="0"
+                      required
+                    />
+                  </label>
+
+                  <label class="conditional" data-scenario="pwd">
+                    <span>Discount rate (%)</span>
+                    <input
+                      type="number"
+                      id="discountRate"
+                      min="0"
+                      step="0.01"
+                      value="20"
+                    />
+                  </label>
+
+                  <label class="conditional" data-scenario="regular">
+                    <span>Discount amount</span>
+                    <input
+                      type="number"
+                      id="discountAmount"
+                      min="0"
+                      step="0.01"
+                      value="0"
+                    />
+                  </label>
+
+                  <label>
+                    <span>Add: VAT adjustments</span>
+                    <input
+                      type="number"
+                      id="addedVat"
+                      min="0"
+                      step="0.01"
+                      value="0"
+                    />
+                  </label>
+
+                  <label>
+                    <span>Less: Withholding tax</span>
+                    <input
+                      type="number"
+                      id="withholdingTax"
+                      min="0"
+                      step="0.01"
+                      value="0"
+                    />
+                  </label>
+                </div>
+              </form>
+
+              <section class="results">
+                <article class="card result-card" aria-live="polite">
+                  <h2>Sales breakdown</h2>
+                  <dl>
+                    <div>
+                      <dt>Vatable Sales</dt>
+                      <dd data-field="vatableSales">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>VAT (12%)</dt>
+                      <dd data-field="vat">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>Zero-Rated Sales</dt>
+                      <dd data-field="zeroRatedSales">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>VAT-Exempt Sales</dt>
+                      <dd data-field="vatExemptSales">₱0.00</dd>
+                    </div>
+                  </dl>
+                </article>
+
+                <article class="card result-card" aria-live="polite">
+                  <h2>Invoice summary</h2>
+                  <dl>
+                    <div>
+                      <dt>Total Sales (VAT Inclusive)</dt>
+                      <dd data-field="totalSales">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>less: VAT</dt>
+                      <dd data-field="lessVat">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>Amount Net of VAT</dt>
+                      <dd data-field="amountNetOfVat">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>less: Discount</dt>
+                      <dd data-field="discount">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>add: VAT</dt>
+                      <dd data-field="addedVat">₱0.00</dd>
+                    </div>
+                    <div>
+                      <dt>less: Withholding Tax</dt>
+                      <dd data-field="withholdingTax">₱0.00</dd>
+                    </div>
+                    <div class="total">
+                      <dt>Total Amount Due</dt>
+                      <dd data-field="totalAmountDue">₱0.00</dd>
+                    </div>
+                  </dl>
+                </article>
+              </section>
+            </div>
+          </div>
+          <div class="laptop-base"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
+
