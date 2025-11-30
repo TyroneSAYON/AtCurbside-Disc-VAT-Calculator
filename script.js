@@ -9,6 +9,10 @@ const elements = {
   totalSales: document.getElementById("totalSales"),
   discountRate: document.getElementById("discountRate"),
   discountAmount: document.getElementById("discountAmount"),
+  totalPurchase: document.getElementById("totalPurchase"),
+  totalPeople: document.getElementById("totalPeople"),
+  cardHolders: document.getElementById("cardHolders"),
+  perPerson: document.getElementById("perPerson"),
   addedVat: document.getElementById("addedVat"),
   withholdingTax: document.getElementById("withholdingTax"),
   scenarioButtons: document.querySelectorAll(".scenario-button"),
@@ -41,7 +45,8 @@ const setCurrency = (field, value) => {
 const toggleConditionalFields = (scenario) => {
   const conditionals = document.querySelectorAll(".conditional");
   conditionals.forEach((element) => {
-    element.hidden = element.dataset.scenario !== scenario;
+    const allowedScenarios = (element.dataset.scenario || "").split(" ");
+    element.hidden = !allowedScenarios.includes(scenario);
   });
 };
 
@@ -49,28 +54,65 @@ const calculate = () => {
   const scenario = currentScenario;
   toggleConditionalFields(scenario);
 
-  const totalSales = parseNumber(elements.totalSales.value);
+  let totalSales = 0;
+  let amountNetOfVat = 0;
+  let vat = 0;
+  let discount = 0;
+  let vatableSales = 0;
+  let zeroRatedSales = 0;
+  let vatExemptSales = 0;
+
   const addedVat = parseNumber(elements.addedVat.value);
   const withholding = parseNumber(elements.withholdingTax.value);
 
-  const amountNetOfVat = totalSales / 1.12;
-  const vat = totalSales - amountNetOfVat;
-  const vatableSales = amountNetOfVat;
-  const zeroRatedSales = 0;
-  const vatExemptSales = scenario === "pwd" ? amountNetOfVat : 0;
+  if (scenario === "pwd-group") {
+    // PWD-SC Group Calculator logic
+    const totalPurchase = parseNumber(elements.totalPurchase.value);
+    const totalPeople = Math.max(parseInt(elements.totalPeople.value, 10) || 1, 1);
+    const cardHolders = Math.max(parseInt(elements.cardHolders.value, 10) || 0, 0);
 
-  let discount = 0;
-  if (scenario === "pwd") {
-    const rate = Math.max(parseNumber(elements.discountRate.value) / 100, 0);
-    discount = amountNetOfVat * rate;
+    totalSales = totalPurchase;
+    amountNetOfVat = totalSales / 1.12;
+    vat = amountNetOfVat * 0.12;
+    vatableSales = amountNetOfVat;
+    zeroRatedSales = 0;
+    vatExemptSales = amountNetOfVat;
+
+    // Calculate per person
+    const perPerson = totalPeople > 0 ? totalPurchase / totalPeople : 0;
+    if (elements.perPerson) {
+      elements.perPerson.value = perPerson.toFixed(2);
+    }
+
+    // Discount = (Per Person / 1.12) * 0.2 * Number of Card Holders
+    const perPersonNetOfVat = perPerson / 1.12;
+    discount = perPersonNetOfVat * 0.2 * cardHolders;
     discount = Math.min(discount, amountNetOfVat);
   } else {
-    discount = Math.max(parseNumber(elements.discountAmount.value), 0);
-    discount = Math.min(discount, totalSales);
+    // Regular and PWD individual calculator logic
+    totalSales = parseNumber(elements.totalSales.value);
+    amountNetOfVat = totalSales / 1.12;
+    vat = totalSales - amountNetOfVat;
+    vatableSales = amountNetOfVat;
+    zeroRatedSales = 0;
+    vatExemptSales = scenario === "pwd" ? amountNetOfVat : 0;
+
+    if (scenario === "pwd") {
+      const rate = Math.max(parseNumber(elements.discountRate.value) / 100, 0);
+      const numberOfDiscounts = 1; // Always 1 for PWD/Senior Citizen
+      const singleDiscount = amountNetOfVat * rate;
+      discount = singleDiscount * numberOfDiscounts;
+      discount = Math.min(discount, amountNetOfVat);
+    } else {
+      discount = Math.max(parseNumber(elements.discountAmount.value), 0);
+      discount = Math.min(discount, totalSales);
+    }
   }
 
   const baseTotal =
-    scenario === "pwd" ? amountNetOfVat - discount : totalSales - discount;
+    scenario === "pwd" || scenario === "pwd-group"
+      ? amountNetOfVat - discount
+      : totalSales - discount;
   const totalAmountDue = Math.max(baseTotal + addedVat - withholding, 0);
 
   setCurrency("vatableSales", vatableSales);

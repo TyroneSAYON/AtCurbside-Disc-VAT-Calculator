@@ -8,17 +8,6 @@
   </head>
   <body>
     <main class="app">
-      <section class="intro">
-        <p class="eyebrow">Invoice Calculator</p>
-        <h1>Portable laptop-style workspace.</h1>
-        <p>
-          Inspired by <strong>Invoice Calculator.xlsx</strong>, now reimagined as
-          a responsive laptop calculator. Pick the scenario, enter the
-          VAT-inclusive amount, and the desk-friendly UI crunches the same
-          numbers instantly.
-        </p>
-      </section>
-
       <section class="laptop">
         <div class="laptop-body">
           <div class="laptop-screen">
@@ -38,13 +27,20 @@
                 >
                   PWD / Senior Citizen
                 </button>
+                <button
+                  type="button"
+                  class="scenario-button"
+                  data-scenario="pwd-group"
+                >
+                  PWD-SC Group
+                </button>
               </div>
             </header>
 
             <div class="screen-content">
               <form id="calculator-form">
                 <div class="field-grid">
-                  <label>
+                  <label class="conditional" data-scenario="regular pwd">
                     <span>Total Sales (VAT Inclusive)</span>
                     <input
                       type="number"
@@ -75,6 +71,49 @@
                       min="0"
                       step="0.01"
                       value="0"
+                    />
+                  </label>
+
+                  <label class="conditional" data-scenario="pwd-group">
+                    <span>Total Purchase Amount</span>
+                    <input
+                      type="number"
+                      id="totalPurchase"
+                      min="0"
+                      step="0.01"
+                      value="0"
+                    />
+                  </label>
+
+                  <label class="conditional" data-scenario="pwd-group">
+                    <span>Total People in Group</span>
+                    <input
+                      type="number"
+                      id="totalPeople"
+                      min="1"
+                      step="1"
+                      value="1"
+                    />
+                  </label>
+
+                  <label class="conditional" data-scenario="pwd-group">
+                    <span>Senior/PWD Card Holders</span>
+                    <input
+                      type="number"
+                      id="cardHolders"
+                      min="0"
+                      step="1"
+                      value="0"
+                    />
+                  </label>
+
+                  <label class="conditional" data-scenario="pwd-group">
+                    <span>Per Person</span>
+                    <input
+                      type="number"
+                      id="perPerson"
+                      readonly
+                      tabindex="-1"
                     />
                   </label>
 

@@ -88,7 +88,7 @@ body {
 
 .choice-buttons {
   display: grid;
-  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  grid-template-columns: repeat(3, minmax(100px, 1fr));
   background: rgba(0, 0, 0, 0.08);
   border-radius: 999px;
   padding: 6px;
@@ -156,6 +156,12 @@ input[type="number"]:focus {
   border-color: var(--primary);
   background: #fff;
   box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
+}
+
+input[type="number"][readonly] {
+  background: #f0f0f0;
+  cursor: not-allowed;
+  color: #666;
 }
 
 .results {
@@ -269,6 +275,13 @@ dd {
 
   .choice-buttons {
     width: 100%;
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .scenario-button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
   }
 }
 
